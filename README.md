@@ -83,6 +83,7 @@ export GITHUB_USERNAME='your_username'
 --days N            Custom number of days (overrides --period)
 --format FORMAT     Output: markdown|html|text (default: markdown)
 --output FILE       Save to file instead of printing
+--company NAME      Company name for footer (default: your company)
 --test              Test connection and credentials
 ```
 
@@ -102,20 +103,9 @@ crontab -e
 
 ## Output Example
 
-```markdown
-# GitHub Activity Report
+![Sample Report Screenshot](https://i.ibb.co/z3d4Kg8/Screenshot-2025-11-20-at-20-22-17.png)
 
-**Developer:** username
-**Period:** November 13, 2025 - November 20, 2025
-
-## Executive Summary
-- Total Commits: 47
-- Pull Requests Opened: 5
-- Pull Requests Merged: 4
-- Pull Requests Reviewed: 3
-- Issues Opened: 2
-- Issues Closed: 3
-```
+> See markdown example: [examples/sample_report.md](examples/sample_report.md)
 
 ## Troubleshooting
 
@@ -133,5 +123,19 @@ crontab -e
 
 - GitHub API: 5,000 requests/hour for authenticated requests
 - Reduce `--days` parameter if hitting limits
+
+## Contributing
+
+PRs welcome. Areas for improvement:
+
+- HTML report styling and UI enhancements
+- Additional output formats (JSON, CSV)
+- Performance optimizations
+
+Open an issue to discuss major changes.
+
+## License
+
+MIT License - see [LICENSE](LICENSE)
 
 ---

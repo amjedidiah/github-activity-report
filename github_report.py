@@ -221,13 +221,15 @@ class GitHubActivityReporter:
         
         return summary
     
-    def generate_report(self, days_back: int = 7, output_format: str = 'markdown') -> str:
+    def generate_report(self, days_back: int = 7, output_format: str = 'markdown', 
+                       company: str = 'your company') -> str:
         """
         Generate the activity report.
         
         Args:
             days_back: Number of days to include in the report
             output_format: Format of the report ('markdown', 'text', or 'html')
+            company: Company name for report footer
             
         Returns:
             Formatted report string
@@ -244,11 +246,11 @@ class GitHubActivityReporter:
         summary = self.summarize_events(events)
         
         if output_format == 'markdown':
-            return self._format_markdown_report(start_date, end_date, summary)
+            return self._format_markdown_report(start_date, end_date, summary, company)
         elif output_format == 'html':
-            return self._format_html_report(start_date, end_date, summary)
+            return self._format_html_report(start_date, end_date, summary, company)
         else:
-            return self._format_text_report(start_date, end_date, summary)
+            return self._format_text_report(start_date, end_date, summary, company)
     
     def _add_markdown_header(self, start_date: datetime, end_date: datetime) -> List[str]:
         """Generate markdown header section."""
@@ -347,7 +349,7 @@ class GitHubActivityReporter:
         return lines
     
     def _format_markdown_report(self, start_date: datetime, end_date: datetime, 
-                                summary: Dict) -> str:
+                                summary: Dict, company: str) -> str:
         """Format report as Markdown."""
         report = []
         report.extend(self._add_markdown_header(start_date, end_date))
@@ -357,12 +359,12 @@ class GitHubActivityReporter:
         report.extend(self._add_markdown_prs(summary['pr_details']))
         report.extend(self._add_markdown_issues(summary['issue_details']))
         report.extend(self._add_markdown_reviews(summary['review_details']))
-        report.extend(["\n---\n", "\n*Report generated automatically for SavannahTech*"])
+        report.extend(["\n---\n", f"\n*Report generated automatically for {company}*"])
         
         return '\n'.join(report)
     
     def _format_text_report(self, start_date: datetime, end_date: datetime, 
-                           summary: Dict) -> str:
+                           summary: Dict, company: str) -> str:
         """Format report as plain text."""
         report = []
         report.append("=" * 70)
@@ -392,7 +394,7 @@ class GitHubActivityReporter:
                 report.append(f"  - {repo}")
         
         report.append("\n" + "=" * 70)
-        report.append("Report generated for SavannahTech")
+        report.append(f"Report generated for {company}")
         report.append("=" * 70)
         
         return '\n'.join(report)
@@ -494,14 +496,14 @@ class GitHubActivityReporter:
         </div>"""
     
     def _format_html_report(self, start_date: datetime, end_date: datetime, 
-                           summary: Dict) -> str:
+                           summary: Dict, company: str) -> str:
         """Format report as HTML."""
         styles = self._get_html_styles()
         summary_html = self._get_html_summary(summary)
         repos_html = '<br>'.join(['• ' + repo for repo in sorted(summary['repos'])])
         
         html = f"""<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>GitHub Activity Report</title>
@@ -518,7 +520,7 @@ class GitHubActivityReporter:
         {summary_html}
         <h2>Active Repositories</h2>
         <div class="repo-list">{repos_html}</div>
-        <div class="footer">Report generated automatically for SavannahTech</div>
+        <div class="footer">Report generated automatically for {company}</div>
     </div>
 </body>
 </html>"""
@@ -603,6 +605,11 @@ def setup_argument_parser() -> argparse.ArgumentParser:
         action='store_true',
         help='Test GitHub API connection and credentials'
     )
+    parser.add_argument(
+        '--company',
+        default='your company',
+        help='Company name for report footer (default: your company)'
+    )
     return parser
 
 
@@ -664,7 +671,7 @@ def main():
         sys.exit(0 if success else 1)
     
     reporter = GitHubActivityReporter(args.token, args.username)
-    report = reporter.generate_report(days, args.format)
+    report = reporter.generate_report(days, args.format, args.company)
     save_or_print_report(report, args.output)
 
 
