@@ -103,7 +103,7 @@ crontab -e
 
 ## Output Example
 
-![Sample Report Screenshot](https://i.ibb.co/z3d4Kg8/Screenshot-2025-11-20-at-20-22-17.png)
+![Sample Report Screenshot](https://i.ibb.co/chnY9hsF/Screenshot-2025-11-20-at-20-46-57.png)
 
 > See markdown example: [examples/sample_report.md](examples/sample_report.md)
 
